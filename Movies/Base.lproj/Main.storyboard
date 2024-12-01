@@ -451,7 +451,6 @@
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="Qfs-NF-Ntn" secondAttribute="trailing" id="2Jl-TV-noL"/>
                                             <constraint firstItem="FFr-DT-Xc9" firstAttribute="leading" secondItem="t8X-CW-rXr" secondAttribute="leading" id="DpT-GW-eae"/>
-                                            <constraint firstItem="FFr-DT-Xc9" firstAttribute="top" secondItem="Off-Rt-oGo" secondAttribute="bottom" constant="10" id="LTR-U7-9sC"/>
                                             <constraint firstAttribute="trailing" secondItem="FFr-DT-Xc9" secondAttribute="trailing" id="prK-IA-KUe"/>
                                             <constraint firstItem="Qfs-NF-Ntn" firstAttribute="leading" secondItem="t8X-CW-rXr" secondAttribute="leading" id="sxE-fs-uWL"/>
                                         </constraints>
