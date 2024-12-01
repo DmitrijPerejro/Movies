@@ -13,4 +13,24 @@ struct Movie: Decodable {
     let director: String
     let actors: [String]
     let poster: String
+    let description: String
+    let duration: Int
+    let website: String
+    
+    var fullTitle: String {
+        "\(title) (\(year))"
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case title
+        case year
+        case genre
+        case rating
+        case director
+        case actors
+        case poster
+        case description = "plot"
+        case duration = "runtime"
+        case website
+    }
 }
