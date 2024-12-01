@@ -143,17 +143,12 @@ final class MoviesListViewController: UIViewController, UITextFieldDelegate {
 // MARK: - Navigation
 extension MoviesListViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == navigationIdentifier {
-            if let detailsVC = segue.destination as? MovieDetailsViewController {
-                if let movie = sender as? Movie {
-                    detailsVC.movie = movie
-                }
-            }
+        guard let indexPath = listView.indexPathsForSelectedItems?.first else { return }
+        let movie = movies[indexPath.row]
+        
+        if let detailsVC = segue.destination as? MovieDetailsViewController {
+            detailsVC.movie = movie
         }
-    }
-    
-    func onSelectMovie(_ movie: Movie) {
-        performSegue(withIdentifier: navigationIdentifier, sender: movie)
     }
 }
 
@@ -175,15 +170,6 @@ extension MoviesListViewController: UICollectionViewDataSource {
         return cell
     }
 }
-
-// MARK: - UICollectionViewDelegate
-extension MoviesListViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = movies[indexPath.row]
-        onSelectMovie(movie)
-    }
-}
-
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MoviesListViewController: UICollectionViewDelegateFlowLayout {

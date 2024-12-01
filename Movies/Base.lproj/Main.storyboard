@@ -167,6 +167,7 @@
                                                 <connections>
                                                     <outlet property="movieImage" destination="Yqg-zy-GDx" id="Y8F-ef-HcN"/>
                                                     <outlet property="movieLabel" destination="ulo-Ze-RK2" id="fgW-xJ-ozc"/>
+                                                    <segue destination="m4h-iF-1Yh" kind="show" id="Ztv-hr-LH8"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>
@@ -204,7 +205,6 @@
                         <outlet property="searchTextField" destination="JWo-Rk-Wam" id="XUV-k8-fk4"/>
                         <outlet property="searchView" destination="mux-Z8-dbB" id="Nbb-xm-Wpt"/>
                         <outlet property="sortControl" destination="a2d-pa-pQG" id="FRN-Ie-WIj"/>
-                        <segue destination="m4h-iF-1Yh" kind="show" identifier="movieDetails" id="jfi-o7-B8R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DdP-mF-4Vn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
