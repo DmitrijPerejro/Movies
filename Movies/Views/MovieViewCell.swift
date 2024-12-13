@@ -7,28 +7,33 @@
 
 import UIKit
 
-final class MovieCollectionCellView: UICollectionViewCell {
-    @IBOutlet weak var movieLabel: UILabel!
-    @IBOutlet weak var movieImage: UIImageView!
+final class MovieViewCell: UITableViewCell {
+
+    // MARK: IBOutlets
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var imageViewPoster: UIImageView!
     
-    private let networkManager = NetworkManager.shared
+    let networkManager = NetworkManager.shared
     
     func configure(with movie: Movie) {
-        movieLabel.text = movie.fullTitle
+        titleLabel.text = movie.title
         fetchMovieImage(from: URL(string: movie.poster)!)
+        imageViewPoster.layer.cornerRadius = imageViewPoster.frame.height / 2
     }
 }
 
 // MARK: - network flow
-private extension MovieCollectionCellView {
+extension MovieViewCell {
     func fetchMovieImage(from url: URL) {
         networkManager.fetchImage(from: url, completion: {[unowned self] result in
             switch result {
             case .success(let image):
-                movieImage.image = UIImage(data: image)
+                imageViewPoster.image = UIImage(data: image)
             case .failure:
-                movieImage.image = UIImage(named: "stub-movie-poster")
+                imageView?.image = UIImage(named: "stub-movie-poster")
             }
         })
     }
 }
+
+
