@@ -8,15 +8,20 @@
 import UIKit
 
 final class MovieListViewControllers: UITableViewController {
+    // MARK: services
+    private let moviesService = MovieService()
+    private let search = UISearchController(searchResultsController: nil)
+    
     // MARK: - data
     private var movies: [Movie] = []
     private var filteredMovies: [Movie] = []
     private var data: [Movie] {
-        filteredMovies.isEmpty ? movies : filteredMovies
+        (search.searchBar.text ?? "").isEmpty ? movies : filteredMovies
     }
 
-    private let moviesService = MovieService()
-    private let search = UISearchController()
+    private var isSearching: Bool {
+        search.isActive && !(search.searchBar.text ?? "").isEmpty
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +40,8 @@ final class MovieListViewControllers: UITableViewController {
     }
     
     private func setupUISearchController() -> UISearchController {
-        let search = UISearchController()
         search.searchResultsUpdater = self
+
         search.obscuresBackgroundDuringPresentation = false
         search.searchBar.placeholder = "Search"
         definesPresentationContext = true
@@ -65,6 +70,18 @@ extension MovieListViewControllers {
         cell.configure(with: movie)
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        if (!isSearching) {
+            return nil
+        }
+        
+        if (isSearching && data.count == 0) {
+            return "Фильмов не найдено"
+        }
+        
+        return "Найдено \(data.count)"
     }
 }
 
