@@ -8,6 +8,7 @@
 import UIKit
 
 final class MovieDetailsViewController: UIViewController {
+    // MARK: IBOutlets
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
@@ -21,8 +22,10 @@ final class MovieDetailsViewController: UIViewController {
     @IBOutlet weak var ratingStarsView: UIStackView!
     @IBOutlet var ratingStars: [UIImageView]!
     
+    // MARK: - data
     var movie: Movie!
     
+    // MARK: - services
     private let networkManager = NetworkManager.shared
         
     override func viewDidLoad() {
@@ -30,6 +33,20 @@ final class MovieDetailsViewController: UIViewController {
         title = movie.title
         setInitialInfo()
         fetchMovieImage(from: URL(string: movie.poster)!)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "comments" {
+            if let commentsVC = segue.destination as? CommentsViewController {
+                if let movie = sender as? Movie {
+                    commentsVC.movie = movie
+                }
+            }
+        }
+    }
+    
+    @IBAction func commentsAction() {
+        performSegue(withIdentifier: "comments", sender: movie)
     }
     
     @IBAction func websiteButtonAction() {

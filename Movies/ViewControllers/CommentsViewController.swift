@@ -7,32 +7,53 @@
 
 import UIKit
 
-class CommentsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    enum FethcingState {
-        case loading
-        case loaded
-    }
-    
+final class CommentsViewController: UIViewController {
+    // MARK: IBOutlets
     @IBOutlet weak var list: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
-    var movieId: Int!
+    // MARK: - data
+    var movie: Movie!
+    private var comments: [Comment] = []
     
-    var fetching = false {
+    private var fetching = false {
         didSet {
-            if fetching {
-                activityIndicator.startAnimating()
-            } else {
+            fetching ?
+                activityIndicator.startAnimating() :
                 activityIndicator.stopAnimating()
-            }
         }
     }
 
-    private var comments: [Comment] = []
+    // MARK: - services
     private let commentsService = CommentService()
 
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        list.dataSource = self
+        list.delegate = self
+        
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.style = .large
+        
+        fetchComments()
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension CommentsViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let size = collectionView.frame.width - 32
+        return CGSize(width: size, height: 200)
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+extension CommentsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comments.count
     }
@@ -49,44 +70,15 @@ class CommentsViewController: UIViewController, UICollectionViewDataSource, UICo
         
         return cell
     }
-    
-    func  collectionView(
-            _ collectionView: UICollectionView,
-            layout collectionViewLayout: UICollectionViewLayout,
-            sizeForItemAt indexPath: IndexPath
-        ) -> CGSize {
-            let size = collectionView.frame.width - 32
-            return CGSize(width: size, height: 200)
-        }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        list.dataSource = self
-        list.delegate = self
-        
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.style = .large
-        
-        fetchComments()
-    }
-    
-    private func setupActivityIndicator() {
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(activityIndicator)
-        NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        activityIndicator.startAnimating()
-    }
-    
-    
+}
+
+// MARK: - Network
+extension CommentsViewController {
     private func fetchComments() {
         fetching = true
         
         commentsService.fetch(
-            movieId,
+            movie.id,
             completion: { [weak self] result in
                 guard let self else { return }
                 
@@ -104,6 +96,4 @@ class CommentsViewController: UIViewController, UICollectionViewDataSource, UICo
             }
         )
     }
-    
-
 }

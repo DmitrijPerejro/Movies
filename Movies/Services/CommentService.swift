@@ -16,7 +16,6 @@ final class CommentService {
         guard let url = URL(string: url) else {
             completion(.failure(.noData))
             return
-
         }
 
         networkManager.fetch([Comment].self, from: url, completion: completion)

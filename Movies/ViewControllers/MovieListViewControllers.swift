@@ -7,79 +7,97 @@
 
 import UIKit
 
-class MovieListViewControllers: UITableViewController {
+final class MovieListViewControllers: UITableViewController {
+    // MARK: - data
+    private var movies: [Movie] = []
+    private var filteredMovies: [Movie] = []
+    private var data: [Movie] {
+        filteredMovies.isEmpty ? movies : filteredMovies
+    }
+
+    private let moviesService = MovieService()
+    private let search = UISearchController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-
+        
+        navigationItem.searchController = setupUISearchController()
+        fetchMovies()
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let indexPath = self.tableView.indexPathForSelectedRow else { return }
+        let movie = data[indexPath.row]
+        
+        if let detailsVC = segue.destination as? MovieDetailsViewController {
+            detailsVC.movie = movie
+        }
+    }
+    
+    private func setupUISearchController() -> UISearchController {
+        let search = UISearchController()
+        search.searchResultsUpdater = self
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchBar.placeholder = "Search"
+        definesPresentationContext = true
+        
+        return search
+    }
+    
+}
 
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+// MARK: - UICollectionViewDataSource
+extension MovieListViewControllers {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        100
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        data.count
     }
-
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieViewCell else {
+            return UITableViewCell()
+        }
 
-        // Configure the cell...
-
+        let movie = data[indexPath.item]
+        cell.configure(with: movie)
+        
         return cell
     }
-    */
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+// MARK: - UISearchResultsUpdating
+extension MovieListViewControllers: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text ?? "")
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    private func filterContentForSearchText(_ searchText: String) {
+        filteredMovies = movies.filter { movie in
+            movie.title.lowercased().contains(searchText.lowercased())
+        }
+        
+        tableView.reloadData()
     }
-    */
+}
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+// MARK: - Network
+extension MovieListViewControllers {
+    private func fetchMovies() {
+        moviesService.fetchMovies(
+            completion: { [weak self] result in
+                guard let self else { return }
+                
+                switch result {
+                case .success(let movies):
+                    self.movies = movies
+                    self.tableView.reloadData()
+                case .failure(_):
+                    self.movies.removeAll()
+                }
+            }
+        )
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

@@ -8,7 +8,6 @@
 import UIKit
 
 final class MovieViewCell: UITableViewCell {
-
     // MARK: IBOutlets
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageViewPoster: UIImageView!
@@ -22,8 +21,8 @@ final class MovieViewCell: UITableViewCell {
     }
 }
 
-// MARK: - network flow
-extension MovieViewCell {
+// MARK: - Network
+private extension MovieViewCell {
     func fetchMovieImage(from url: URL) {
         networkManager.fetchImage(from: url, completion: {[unowned self] result in
             switch result {

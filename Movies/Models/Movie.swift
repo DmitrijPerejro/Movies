@@ -6,6 +6,7 @@
 //
 
 struct Movie: Decodable {
+    let id: Int
     let title: String
     let year: Int
     let genre: [String]
@@ -22,6 +23,7 @@ struct Movie: Decodable {
     }
     
     enum CodingKeys: String, CodingKey {
+        case id
         case title
         case year
         case genre

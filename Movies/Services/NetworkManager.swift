@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum API: String {
+    case movies = "https://www.freetestapi.com/api/v1/movies"
+    case comments = "https://jsonplaceholder.typicode.com/comments"
+}
+
 enum NetworkError: Error {
     case noData
     case decode
