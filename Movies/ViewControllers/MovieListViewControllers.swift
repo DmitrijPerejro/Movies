@@ -16,7 +16,8 @@ final class MovieListViewControllers: UITableViewController {
     private var movies: [Movie] = []
     private var filteredMovies: [Movie] = []
     private var data: [Movie] {
-        (search.searchBar.text ?? "").isEmpty ? movies : filteredMovies
+        let result = (search.searchBar.text ?? "").isEmpty ? movies : filteredMovies
+        return result.sorted { $0.rating > $1.rating }
     }
 
     private var isSearching: Bool {
@@ -104,6 +105,7 @@ extension MovieListViewControllers: UISearchResultsUpdating {
 extension MovieListViewControllers {
     private func fetchMovies() {
         moviesService.fetchMovies(
+            from: URL(string: MovieService.baseURL)!,
             completion: { [weak self] result in
                 guard let self else { return }
                 

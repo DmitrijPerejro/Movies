@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol NewCommentViewControllerDelgate: AnyObject {
+    func onSubmit(comment: Comment)
+}
+
 final class CommentsViewController: UIViewController {
     // MARK: IBOutlets
     @IBOutlet weak var list: UICollectionView!
@@ -32,11 +36,19 @@ final class CommentsViewController: UIViewController {
         
         list.dataSource = self
         list.delegate = self
-        
+
         activityIndicator.hidesWhenStopped = true
         activityIndicator.style = .large
         
         fetchComments()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let navigationController = segue.destination as? UINavigationController,
+           let newReviewVC = navigationController.topViewController as? NewCommentViewController {
+            newReviewVC.delegate = self
+            newReviewVC.movie = movie
+        }
     }
 }
 
@@ -78,7 +90,7 @@ extension CommentsViewController {
         fetching = true
         
         commentsService.fetch(
-            movie.id,
+            from: URL(string: "\(CommentService.baseURL)?postId=\(movie.id)")!,
             completion: { [weak self] result in
                 guard let self else { return }
                 
@@ -95,5 +107,15 @@ extension CommentsViewController {
                 }
             }
         )
+    }
+}
+
+// MARK: - NewCommentViewControllerDelgate
+extension CommentsViewController: NewCommentViewControllerDelgate {
+    func onSubmit(comment: Comment) {
+        comments.append(comment)
+        let newIndexPath = IndexPath(item: comments.count - 1, section: 0)
+        list.insertItems(at: [newIndexPath])
+        list.scrollToItem(at: newIndexPath, at: .bottom, animated: true)
     }
 }

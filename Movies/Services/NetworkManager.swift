@@ -6,60 +6,23 @@
 //
 
 import Foundation
-
-enum API: String {
-    case movies = "https://www.freetestapi.com/api/v1/movies"
-    case comments = "https://jsonplaceholder.typicode.com/comments"
-}
-
-enum NetworkError: Error {
-    case noData
-    case decode
-}
+import Alamofire
 
 final class NetworkManager {
     static let shared = NetworkManager()
     
     private init() {}
     
-    func fetch<T: Decodable>(
-        _ type: T.Type,
-        from url: URL,
-        completion: @escaping (Result<T, NetworkError>) -> Void
-    ) {
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data else {
-                completion(.failure(.noData))
-                return
-            }
-            
-            do {
-                let result = try JSONDecoder().decode(T.self, from: data)
-            
-                DispatchQueue.main.async {
-                    completion(.success(result))
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(.decode))
+    func fetchData(from url: String, completion: @escaping(Result<Data, AFError>) -> Void) {
+        AF.request(url)
+            .validate()
+            .responseData { response in
+                switch response.result {
+                case .success(let data):
+                    completion(.success(data))
+                case .failure(let error):
+                    completion(.failure(error))
                 }
             }
-        }.resume()
     }
-    
-    func fetchImage(from url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        DispatchQueue.global().async {
-            guard let imageData = try? Data(contentsOf: url) else {
-                DispatchQueue.main.async {
-                    completion(.failure(.noData))
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                completion(.success(imageData))
-            }
-        }
-    }
-    
 }

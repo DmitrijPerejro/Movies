@@ -7,20 +7,37 @@
 
 import Foundation
 
-// stub
-let userAvatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-Ybci_L25OcWJhFyrcmoR4q_vsqoAtT_Qug&s"
-
-struct Comment: Decodable {
+struct Comment: Codable {
     let id: Int
     let author: String
     let email: String
     let body: String
-    let avatar = userAvatar
+    let avatar: String?
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case author = "name"
-        case email
-        case body
+    init(id: Int, author: String, email: String, body: String, avatar: String?) {
+        self.id = id
+        self.author = author
+        self.email = email
+        self.body = body
+        self.avatar = avatar
     }
+    
+    init(data: [String: Any]) {
+        id = data["id"] as? Int ?? 0
+        author = data["name"] as? String ?? ""
+        email = data["email"] as? String ?? ""
+        body = data["body"] as? String ?? ""
+        avatar = data["avatar"] as? String ?? nil
+    }
+
+    static func fromServer(from value: Any) -> [Comment] {
+        guard let data = value as? [[String: Any]] else { return [] }
+        return data.map { Comment(data: $0) }
+    }
+}
+
+struct CommentRequest: Encodable {
+    let author: String
+    let email: String
+    let body: String
 }

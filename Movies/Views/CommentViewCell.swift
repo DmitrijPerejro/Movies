@@ -21,13 +21,12 @@ final class CommentViewCell: UICollectionViewCell {
         email.text = comment.email
         body.text = comment.body
         
-        fetchMovieImage(from: URL(string: comment.avatar)!)
+        fetchMovieImage(from: comment.avatar ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-Ybci_L25OcWJhFyrcmoR4q_vsqoAtT_Qug&s")
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
-        
     }
 
     private func setupUI() {
@@ -48,8 +47,8 @@ final class CommentViewCell: UICollectionViewCell {
 
 // MARK: - Network
 private extension CommentViewCell {
-    func fetchMovieImage(from url: URL) {
-        networkManager.fetchImage(from: url, completion: { [unowned self] result in
+    func fetchMovieImage(from url: String) {
+        networkManager.fetchData(from: url, completion: { [unowned self] result in
             switch result {
             case .success(let image):
                 avatar.image = UIImage(data: image)

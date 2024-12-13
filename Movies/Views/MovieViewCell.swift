@@ -8,7 +8,6 @@
 import UIKit
 
 final class MovieViewCell: UITableViewCell {
-
     // MARK: IBOutlets
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageViewPoster: UIImageView!
@@ -16,16 +15,16 @@ final class MovieViewCell: UITableViewCell {
     let networkManager = NetworkManager.shared
     
     func configure(with movie: Movie) {
-        titleLabel.text = movie.title
-        fetchMovieImage(from: URL(string: movie.poster)!)
+        titleLabel.text = "\(movie.fullTitle)\n\(movie.rating) ⭐"
+        fetchMovieImage(from: movie.poster)
         imageViewPoster.layer.cornerRadius = imageViewPoster.frame.height / 2
     }
 }
 
 // MARK: - Network
 private extension MovieViewCell {
-    func fetchMovieImage(from url: URL) {
-        networkManager.fetchImage(from: url, completion: {[unowned self] result in
+    func fetchMovieImage(from url: String) {
+        networkManager.fetchData(from: url, completion: {[unowned self] result in
             switch result {
             case .success(let image):
                 imageViewPoster.image = UIImage(data: image)

@@ -32,7 +32,7 @@ final class MovieDetailsViewController: UIViewController {
         super.viewDidLoad()
         title = movie.title
         setInitialInfo()
-        fetchMovieImage(from: URL(string: movie.poster)!)
+        fetchMovieImage(from: movie.poster)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -85,8 +85,8 @@ final class MovieDetailsViewController: UIViewController {
 
 // MARK: - network flow
 extension MovieDetailsViewController {
-    func fetchMovieImage(from url: URL) {
-        networkManager.fetchImage(from: url, completion: { [unowned self] result in
+    func fetchMovieImage(from url: String) {
+        networkManager.fetchData(from: url, completion: { [unowned self] result in
             switch result {
             case .success(let image):
                 moviePoster.image = UIImage(data: image)
