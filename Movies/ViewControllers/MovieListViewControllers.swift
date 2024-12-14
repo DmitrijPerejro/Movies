@@ -19,11 +19,11 @@ final class MovieListViewControllers: UITableViewController {
         let result = (search.searchBar.text ?? "").isEmpty ? movies : filteredMovies
         return result.sorted { $0.rating > $1.rating }
     }
-
+    
     private var isSearching: Bool {
         search.isActive && !(search.searchBar.text ?? "").isEmpty
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,7 +42,7 @@ final class MovieListViewControllers: UITableViewController {
     
     private func setupUISearchController() -> UISearchController {
         search.searchResultsUpdater = self
-
+        
         search.obscuresBackgroundDuringPresentation = false
         search.searchBar.placeholder = "Search"
         definesPresentationContext = true
@@ -57,7 +57,7 @@ extension MovieListViewControllers {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         100
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         data.count
     }
@@ -66,7 +66,7 @@ extension MovieListViewControllers {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieViewCell else {
             return UITableViewCell()
         }
-
+        
         let movie = data[indexPath.item]
         cell.configure(with: movie)
         

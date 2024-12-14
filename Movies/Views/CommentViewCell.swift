@@ -28,15 +28,15 @@ final class CommentViewCell: UICollectionViewCell {
         super.awakeFromNib()
         setupUI()
     }
-
+    
     private func setupUI() {
         avatar.layer.cornerRadius = avatar.frame.width / 2
         avatar.layer.masksToBounds = true
-
+        
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         contentView.backgroundColor = .white
-
+        
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 0.2

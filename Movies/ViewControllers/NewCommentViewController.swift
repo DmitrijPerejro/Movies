@@ -52,7 +52,7 @@ final class NewCommentViewController: UIViewController {
         let email = emailTextField.text ?? ""
         let review = commentTextField.text ?? ""
         let comment = CommentRequest(author: name, email: email, body: review)
-    
+        
         submitReview(comment)
         dismiss(animated: true)
         
@@ -88,13 +88,13 @@ final class NewCommentViewController: UIViewController {
             submitCommentButton.setTitle("Submitting...", for: .normal)
         }
     }
-        
+    
     private func showValidationAlert() {
         let alert = UIAlertController(title: "Validation Error", message: "Please fill all fields", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .destructive))
         present(alert, animated: true)
     }
-
+    
 }
 
 // MARK: - UITextFieldDelegate, UITextViewDelegate
@@ -106,11 +106,11 @@ extension NewCommentViewController: UITextFieldDelegate, UITextViewDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == nameTextField {
             emailTextField.becomeFirstResponder()
-         } else if textField == emailTextField {
-             commentTextField.becomeFirstResponder()
-         } else {
-             textField.resignFirstResponder()
-         }
+        } else if textField == emailTextField {
+            commentTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
         
         return true
     }

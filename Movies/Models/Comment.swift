@@ -29,7 +29,7 @@ struct Comment: Codable {
         body = data["body"] as? String ?? ""
         avatar = data["avatar"] as? String ?? nil
     }
-
+    
     static func fromServer(from value: Any) -> [Comment] {
         guard let data = value as? [[String: Any]] else { return [] }
         return data.map { Comment(data: $0) }

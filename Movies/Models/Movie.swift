@@ -22,6 +22,7 @@ struct Movie: Codable {
         "\(title) (\(year))"
     }
     
+    
     init(id: Int, title: String, year: Int, genre: [String], rating: Double, director: String, actors: [String], poster: String, description: String, duration: Int, website: String) {
         self.id = id
         self.title = title

@@ -15,7 +15,7 @@ final class CommentsViewController: UIViewController {
     // MARK: IBOutlets
     @IBOutlet weak var list: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-
+    
     // MARK: - data
     var movie: Movie!
     private var comments: [Comment] = []
@@ -23,20 +23,20 @@ final class CommentsViewController: UIViewController {
     private var fetching = false {
         didSet {
             fetching ?
-                activityIndicator.startAnimating() :
-                activityIndicator.stopAnimating()
+            activityIndicator.startAnimating() :
+            activityIndicator.stopAnimating()
         }
     }
-
+    
     // MARK: - services
     private let commentsService = CommentService()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         list.dataSource = self
         list.delegate = self
-
+        
         activityIndicator.hidesWhenStopped = true
         activityIndicator.style = .large
         
@@ -69,7 +69,7 @@ extension CommentsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comments.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "commentCell", for: indexPath)
         

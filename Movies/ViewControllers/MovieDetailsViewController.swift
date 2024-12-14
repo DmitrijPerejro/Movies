@@ -27,7 +27,7 @@ final class MovieDetailsViewController: UIViewController {
     
     // MARK: - services
     private let networkManager = NetworkManager.shared
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = movie.title
